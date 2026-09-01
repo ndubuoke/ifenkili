@@ -14,7 +14,7 @@ export function NewsletterForm() {
     e.preventDefault();
     const form = e.currentTarget;
     const data = new FormData(form);
-    if (data.get("company")) return; // honeypot
+    if (data.get("hp_ifk")) return; // honeypot — bots fill it, autofill won't
 
     const email = String(data.get("email") ?? "").trim();
     if (!EMAIL_RE.test(email)) {
@@ -46,16 +46,21 @@ export function NewsletterForm() {
     <form className="inline-form" onSubmit={onSubmit} noValidate>
       <input
         type="text"
-        name="company"
+        name="hp_ifk"
         className="hp"
         tabIndex={-1}
         autoComplete="off"
         aria-hidden="true"
+        data-1p-ignore
+        data-lpignore="true"
+        data-form-type="other"
+        data-bwignore
       />
       <input
         type="email"
         name="email"
         required
+        autoComplete="email"
         placeholder="you@email.com"
         aria-label="Email address"
       />

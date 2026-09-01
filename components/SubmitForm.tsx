@@ -23,7 +23,7 @@ export function SubmitForm() {
     e.preventDefault();
     const form = e.currentTarget;
     const data = new FormData(form);
-    if (data.get("company_url")) return; // honeypot
+    if (data.get("hp_ifk")) return; // honeypot — bots fill it, autofill won't
 
     const payload = {
       title: String(data.get("title") ?? "").trim(),
@@ -80,16 +80,27 @@ export function SubmitForm() {
     <form onSubmit={onSubmit} noValidate>
       <input
         type="text"
-        name="company_url"
+        name="hp_ifk"
         className="hp"
         tabIndex={-1}
         autoComplete="off"
         aria-hidden="true"
+        data-1p-ignore
+        data-lpignore="true"
+        data-form-type="other"
+        data-bwignore
       />
 
       <div className="field">
         <label htmlFor="title">Title</label>
-        <input id="title" name="title" required maxLength={140} placeholder="Give it a title" />
+        <input
+          id="title"
+          name="title"
+          required
+          maxLength={140}
+          autoComplete="off"
+          placeholder="Give it a title"
+        />
       </div>
 
       <div className="field">
@@ -115,6 +126,7 @@ export function SubmitForm() {
           id="context"
           name="context"
           maxLength={160}
+          autoComplete="off"
           placeholder="e.g. mid-size fintech, first management job"
         />
       </div>
@@ -145,13 +157,26 @@ export function SubmitForm() {
       <div className="field">
         <label htmlFor="penName">Name / pen name</label>
         <span className="hint">Only used if you turn off anonymous above.</span>
-        <input id="penName" name="penName" maxLength={80} placeholder="How to credit you" />
+        <input
+          id="penName"
+          name="penName"
+          maxLength={80}
+          autoComplete="off"
+          placeholder="How to credit you"
+        />
       </div>
 
       <div className="field">
         <label htmlFor="contact">Your email</label>
         <span className="hint">Private. So we can reach you about edits or publishing.</span>
-        <input id="contact" name="contact" type="email" required placeholder="you@email.com" />
+        <input
+          id="contact"
+          name="contact"
+          type="email"
+          required
+          autoComplete="email"
+          placeholder="you@email.com"
+        />
       </div>
 
       <button className="btn btn-primary" type="submit" disabled={state === "loading"}>
