@@ -1,0 +1,30 @@
+# fly.toml — IFENKILI (Phase 1)
+# Run `fly launch --no-deploy` once to claim an app name, or edit `app` below.
+
+app = "ifenkili"
+primary_region = "jnb"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  NEXT_PUBLIC_SITE_URL = "https://ifenkili.xyz"
+  INBOX_DIR = "/data"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ["app"]
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"
+
+# Persist on-disk form submissions across deploys/restarts.
+# Create with: fly volumes create data --size 1 --region jnb
+[mounts]
+  source = "data"
+  destination = "/data"
