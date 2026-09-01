@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { deliver } from "@/lib/inbox";
+import { addToAudience, deliver } from "@/lib/inbox";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -19,8 +19,15 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Enter a valid email address." }, { status: 400 });
   }
 
-  const result = await deliver({ kind: "subscribe", email });
-  if (result === "failed") {
+  // Add to the managed Resend Audience (the real subscriber list) and send
+  // a notification email in parallel. Either one succeeding is enough —
+  // only fail the request if both come up empty.
+  const [audience, notified] = await Promise.all([
+    addToAudience(email),
+    deliver({ kind: "subscribe", email }),
+  ]);
+
+  if (audience === "failed" && notified === "failed") {
     return NextResponse.json(
       { error: "Couldn't save that just now. Try again in a moment." },
       { status: 502 },

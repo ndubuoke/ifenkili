@@ -51,6 +51,41 @@ function appendToDisk(record: Delivery): boolean {
   return false;
 }
 
+export type AudienceResult = "added" | "skipped" | "failed";
+
+/**
+ * Add a subscriber to the Resend Audience (the managed contact list).
+ * No-ops when RESEND_AUDIENCE_ID isn't configured. Never throws.
+ * A contact that already exists counts as success.
+ */
+export async function addToAudience(email: string): Promise<AudienceResult> {
+  const key = process.env.RESEND_API_KEY;
+  const audienceId = process.env.RESEND_AUDIENCE_ID;
+  if (!key || !audienceId) return "skipped";
+
+  try {
+    const res = await fetch(
+      `https://api.resend.com/audiences/${audienceId}/contacts`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${key}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, unsubscribed: false }),
+      },
+    );
+    if (res.ok) return "added";
+    const detail = await res.text().catch(() => "");
+    if (res.status === 409 || /already exists/i.test(detail)) return "added";
+    console.error(`[audience] Resend responded ${res.status}: ${detail}`);
+    return "failed";
+  } catch (err) {
+    console.error("[audience] request failed:", err);
+    return "failed";
+  }
+}
+
 /**
  * Phase 1 delivery: email via Resend if configured, otherwise append to a
  * local NDJSON file. Never throws — returns which path succeeded so the
