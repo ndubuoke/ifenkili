@@ -13,7 +13,7 @@ You know the setup — a long thread, forty replies deep, the distribution list 
 
 Then he hit reply-all to a list of about ninety people.
 
-For maybe twenty minutes nothing happened. That is the part I still think about. Ninety inboxes, and the silence while everyone decided whether they had really just read that. Then the recalls started landing — *"[Name] would like to recall the message"* — which of course is the corporate equivalent of running down the street after a bus that has already gone.
+For maybe twenty minutes nothing happened. That is the part I still think about. Ninety inboxes, and the silence while everyone decided whether they had really just read that. Then the recalls started landing — *Yvonne would like to recall the message"* — which of course is the corporate equivalent of running down the street after a bus that has already gone.
 
 By eleven someone had screenshotted it. By lunch it had reached the two directors it was about. One of them replied to the whole list with a single line: *"Noted. Thank you for your candour."* Which was somehow worse than shouting.
 
