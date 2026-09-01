@@ -23,7 +23,6 @@ export function SubmitForm() {
     e.preventDefault();
     const form = e.currentTarget;
     const data = new FormData(form);
-    if (data.get("hp_ifk")) return; // honeypot — bots fill it, autofill won't
 
     const payload = {
       title: String(data.get("title") ?? "").trim(),
@@ -78,19 +77,6 @@ export function SubmitForm() {
 
   return (
     <form onSubmit={onSubmit} noValidate>
-      <input
-        type="text"
-        name="hp_ifk"
-        className="hp"
-        tabIndex={-1}
-        autoComplete="off"
-        aria-hidden="true"
-        data-1p-ignore
-        data-lpignore="true"
-        data-form-type="other"
-        data-bwignore
-      />
-
       <div className="field">
         <label htmlFor="title">Title</label>
         <input
