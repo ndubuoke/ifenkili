@@ -4,7 +4,7 @@
 #
 
 app = 'ifenkili'
-primary_region = 'iab'
+primary_region = 'jnb'
 
 [build]
   dockerfile = 'Dockerfile'
@@ -12,10 +12,6 @@ primary_region = 'iab'
 [env]
   INBOX_DIR = '/data'
   NEXT_PUBLIC_SITE_URL = 'https://ifenkili.xyz'
-
-[[mounts]]
-  source = 'data'
-  destination = '/data'
 
 [http_service]
   internal_port = 3000
