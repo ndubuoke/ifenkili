@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Lora, JetBrains_Mono } from "next/font/google";
+import { Poppins, Lora, JetBrains_Mono } from "next/font/google";
 import { site } from "@/lib/site";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { CursorGlow } from "@/components/CursorGlow";
 import "./globals.css";
 
-const spaceGrotesk = Space_Grotesk({
+const poppins = Poppins({
   subsets: ["latin"],
-  variable: "--font-space-grotesk",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-poppins",
   display: "swap",
 });
 
@@ -54,11 +56,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body
-        className={`${spaceGrotesk.variable} ${lora.variable} ${jetbrainsMono.variable}`}
-      >
+    <html
+      lang="en"
+      className={`${poppins.variable} ${lora.variable} ${jetbrainsMono.variable}`}
+    >
+      <body>
         <div className="grain" aria-hidden="true" />
+        <CursorGlow />
         <div id="app">
           <SiteHeader />
           <main>{children}</main>
