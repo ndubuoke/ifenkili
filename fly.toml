@@ -10,7 +10,6 @@ primary_region = 'jnb'
   dockerfile = 'Dockerfile'
 
 [env]
-  INBOX_DIR = '/data'
   NEXT_PUBLIC_SITE_URL = 'https://ifenkili.xyz'
 
 [http_service]

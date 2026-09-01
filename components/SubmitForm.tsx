@@ -5,9 +5,19 @@ import { categories } from "@/lib/categories";
 
 type State = "idle" | "loading" | "ok" | "err";
 
+const MIN_BODY = 200;
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export function SubmitForm() {
   const [state, setState] = useState<State>("idle");
   const [msg, setMsg] = useState("");
+  const [bodyLen, setBodyLen] = useState(0);
+
+  const fail = (message: string, focusId?: string) => {
+    setState("err");
+    setMsg(message);
+    if (focusId) document.getElementById(focusId)?.focus();
+  };
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -16,37 +26,58 @@ export function SubmitForm() {
     if (data.get("company_url")) return; // honeypot
 
     const payload = {
-      title: data.get("title"),
-      category: data.get("category"),
-      body: data.get("body"),
-      penName: data.get("penName"),
+      title: String(data.get("title") ?? "").trim(),
+      category: String(data.get("category") ?? ""),
+      body: String(data.get("body") ?? "").trim(),
+      penName: String(data.get("penName") ?? "").trim(),
       anonymous: data.get("anonymous") === "on",
-      context: data.get("context"),
-      contact: data.get("contact"),
+      context: String(data.get("context") ?? "").trim(),
+      contact: String(data.get("contact") ?? "").trim(),
     };
 
+    // Visible, in-form validation (no native browser tooltips).
+    if (payload.title.length < 2) return fail("Add a title.", "title");
+    if (!payload.category) return fail("Choose a category.", "category");
+    if (payload.body.length < MIN_BODY) {
+      return fail(
+        `The story's a little short — give us at least a few paragraphs (${MIN_BODY}+ characters, you have ${payload.body.length}).`,
+        "body",
+      );
+    }
+    if (!EMAIL_RE.test(payload.contact)) {
+      return fail("Add an email we can reach you at.", "contact");
+    }
+
     setState("loading");
+    setMsg("");
     try {
       const res = await fetch("/api/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error ?? "Something went wrong.");
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(json.error ?? "Something went wrong. Try again.");
       setState("ok");
       setMsg(
         "Received. We read every submission by hand — if it's a fit, you'll hear from us before it goes live.",
       );
       form.reset();
+      setBodyLen(0);
     } catch (err) {
       setState("err");
-      setMsg(err instanceof Error ? err.message : "Something went wrong.");
+      setMsg(
+        err instanceof Error
+          ? err.message
+          : "Couldn't send that. Please email it to hello@ifenkili.xyz.",
+      );
     }
   };
 
+  const bodyShort = bodyLen > 0 && bodyLen < MIN_BODY;
+
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={onSubmit} noValidate>
       <input
         type="text"
         name="company_url"
@@ -90,7 +121,18 @@ export function SubmitForm() {
 
       <div className="field">
         <label htmlFor="body">Your story</label>
-        <textarea id="body" name="body" required minLength={200} placeholder="Take your time." />
+        <textarea
+          id="body"
+          name="body"
+          required
+          placeholder="Take your time."
+          onChange={(e) => setBodyLen(e.currentTarget.value.trim().length)}
+        />
+        <span className="hint" style={bodyShort ? { color: "var(--accent-2)" } : undefined}>
+          {bodyLen === 0
+            ? `${MIN_BODY} characters minimum.`
+            : `${bodyLen} / ${MIN_BODY} characters`}
+        </span>
       </div>
 
       <div className="checkbox-row">
@@ -117,7 +159,9 @@ export function SubmitForm() {
       </button>
 
       {(state === "ok" || state === "err") && (
-        <p className={`form-note ${state === "ok" ? "ok" : "err"}`}>{msg}</p>
+        <p className={`form-note ${state === "ok" ? "ok" : "err"}`} role="status">
+          {msg}
+        </p>
       )}
     </form>
   );

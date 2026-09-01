@@ -4,6 +4,8 @@ import { useState } from "react";
 
 type State = "idle" | "loading" | "ok" | "err";
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export function NewsletterForm() {
   const [state, setState] = useState<State>("idle");
   const [msg, setMsg] = useState("");
@@ -13,26 +15,35 @@ export function NewsletterForm() {
     const form = e.currentTarget;
     const data = new FormData(form);
     if (data.get("company")) return; // honeypot
+
+    const email = String(data.get("email") ?? "").trim();
+    if (!EMAIL_RE.test(email)) {
+      setState("err");
+      setMsg("Enter a valid email address.");
+      return;
+    }
+
     setState("loading");
+    setMsg("");
     try {
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: data.get("email") }),
+        body: JSON.stringify({ email }),
       });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error ?? "Something went wrong.");
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(json.error ?? "Something went wrong. Try again.");
       setState("ok");
       setMsg("You're on the list. Friday, then.");
       form.reset();
     } catch (err) {
       setState("err");
-      setMsg(err instanceof Error ? err.message : "Something went wrong.");
+      setMsg(err instanceof Error ? err.message : "Something went wrong. Try again.");
     }
   };
 
   return (
-    <form className="inline-form" onSubmit={onSubmit}>
+    <form className="inline-form" onSubmit={onSubmit} noValidate>
       <input
         type="text"
         name="company"

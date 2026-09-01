@@ -19,10 +19,12 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Enter a valid email address." }, { status: 400 });
   }
 
-  try {
-    await deliver({ kind: "subscribe", email });
-  } catch {
-    return NextResponse.json({ error: "Could not save that. Try again." }, { status: 500 });
+  const result = await deliver({ kind: "subscribe", email });
+  if (result === "failed") {
+    return NextResponse.json(
+      { error: "Couldn't save that just now. Try again in a moment." },
+      { status: 502 },
+    );
   }
 
   return NextResponse.json({ ok: true });

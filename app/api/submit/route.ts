@@ -43,19 +43,25 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Add an email we can reach you at." }, { status: 400 });
   }
 
-  try {
-    await deliver({
-      kind: "submission",
-      title,
-      category,
-      anonymous,
-      penName: anonymous ? "" : penName,
-      context,
-      contact,
-      body: story,
-    });
-  } catch {
-    return NextResponse.json({ error: "Could not send that. Try again." }, { status: 500 });
+  const result = await deliver({
+    kind: "submission",
+    title,
+    category,
+    anonymous,
+    penName: anonymous ? "" : penName,
+    context,
+    contact,
+    body: story,
+  });
+
+  if (result === "failed") {
+    return NextResponse.json(
+      {
+        error:
+          "We couldn't record that just now. Please email it to hello@ifenkili.xyz and we'll sort it.",
+      },
+      { status: 502 },
+    );
   }
 
   return NextResponse.json({ ok: true });
