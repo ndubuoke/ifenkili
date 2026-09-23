@@ -13,6 +13,8 @@ import {
 } from "@/lib/content";
 import { getCategory } from "@/lib/categories";
 
+export const revalidate = 300;
+
 export function generateStaticParams() {
   return getAllStories().map((s) => ({ slug: s.slug }));
 }

@@ -4,6 +4,8 @@ import { StoryCard } from "@/components/StoryCard";
 import { categories, getCategory } from "@/lib/categories";
 import { getStoriesByCategory } from "@/lib/content";
 
+export const revalidate = 300;
+
 export function generateStaticParams() {
   return categories.map((c) => ({ slug: c.slug }));
 }

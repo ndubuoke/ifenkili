@@ -3,6 +3,8 @@ import Link from "next/link";
 import { getAllStories, formatDate } from "@/lib/content";
 import { categories, getCategory } from "@/lib/categories";
 
+export const revalidate = 300;
+
 export const metadata: Metadata = {
   title: "Stories",
   description: "Every story on IFENKILI — love, poems, corporate confessions, and more.",

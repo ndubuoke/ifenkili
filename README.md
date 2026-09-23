@@ -48,6 +48,14 @@ Body in Markdown. Reading time is calculated from word count.
 
 Files starting with `_` are ignored. Restart `npm run dev` after adding files.
 
+### Scheduling a story
+
+Set `date` to a future day (UTC) and the story is parsed and committed like any
+other file, but stays invisible — 404 on its own page, absent from every
+listing — until that date arrives. Listing pages revalidate every 5 minutes in
+production, so a scheduled story goes live on its own with no redeploy needed;
+just make sure the file has already shipped in a deploy before its date.
+
 ## Form delivery
 
 Set these to have submissions emailed instead of written to disk:

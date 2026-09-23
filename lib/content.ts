@@ -34,6 +34,14 @@ function readStoryFile(fileName: string): Story {
   const readingTime = Math.max(1, Math.round(words / 200));
   const anonymous = Boolean(data.anonymous);
 
+  // YAML parses an unquoted `date: 2026-08-24` as a native Date, not a
+  // string — String(date) then yields a localized, non-ISO format. Normalize
+  // both that case and a plain string back to yyyy-mm-dd.
+  const date =
+    data.date instanceof Date
+      ? data.date.toISOString().slice(0, 10)
+      : String(data.date ?? "1970-01-01");
+
   return {
     slug,
     title: String(data.title ?? slug),
@@ -42,7 +50,7 @@ function readStoryFile(fileName: string): Story {
     author: anonymous ? "Anonymous" : String(data.author ?? "Ifenkili"),
     anonymous,
     mood: data.mood ? String(data.mood) : undefined,
-    date: String(data.date ?? "1970-01-01"),
+    date,
     featured: Boolean(data.featured),
     readingTime,
     wordCount: words,
@@ -53,7 +61,16 @@ function readStoryFile(fileName: string): Story {
 
 let cache: Story[] | null = null;
 
-export function getAllStories(): Story[] {
+// A story whose `date` is in the future is scheduled, not published — it's
+// parsed and cached like any other file, but stays invisible until that date
+// (UTC midnight) arrives. Combined with `export const revalidate` on the
+// listing pages, this lets a scheduled story go live on its own without a
+// redeploy.
+function isPublished(story: Story): boolean {
+  return new Date(`${story.date}T00:00:00Z`).getTime() <= Date.now();
+}
+
+function getRawStories(): Story[] {
   if (cache && process.env.NODE_ENV === "production") return cache;
   if (!fs.existsSync(STORIES_DIR)) return [];
   const files = fs
@@ -64,6 +81,10 @@ export function getAllStories(): Story[] {
     .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
   cache = stories;
   return stories;
+}
+
+export function getAllStories(): Story[] {
+  return getRawStories().filter(isPublished);
 }
 
 export function getStory(slug: string): Story | undefined {
