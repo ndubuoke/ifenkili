@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
-import { Poppins, Lora, JetBrains_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Lora } from "next/font/google";
 import { site } from "@/lib/site";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { CursorGlow } from "@/components/CursorGlow";
 import "./globals.css";
 
-const poppins = Poppins({
+const geist = Geist({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-poppins",
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-geist",
   display: "swap",
 });
 
@@ -19,10 +19,10 @@ const lora = Lora({
   display: "swap",
 });
 
-const jetbrainsMono = JetBrains_Mono({
+const geistMono = Geist_Mono({
   subsets: ["latin"],
   weight: ["400", "500"],
-  variable: "--font-jetbrains-mono",
+  variable: "--font-geist-mono",
   display: "swap",
 });
 
@@ -58,7 +58,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${poppins.variable} ${lora.variable} ${jetbrainsMono.variable}`}
+      className={`${geist.variable} ${lora.variable} ${geistMono.variable}`}
     >
       <body>
         <div className="grain" aria-hidden="true" />

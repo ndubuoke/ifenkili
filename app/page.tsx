@@ -3,32 +3,59 @@ import { FeaturedStory } from "@/components/FeaturedStory";
 import { StoryCard } from "@/components/StoryCard";
 import { CategoryStrip } from "@/components/CategoryStrip";
 import { NewsletterForm } from "@/components/NewsletterForm";
-import { getFeaturedStory, getLatestStories } from "@/lib/content";
+import { getAllStories, getFeaturedStory, getLatestStories } from "@/lib/content";
+import { categories } from "@/lib/categories";
+
+export const revalidate = 300;
 
 export default function HomePage() {
+  const all = getAllStories();
   const featured = getFeaturedStory();
   const latest = getLatestStories(6, featured?.slug).slice(0, 6);
 
   return (
     <>
-      <section className="container hero">
-        <p className="eyebrow reveal">A home for stories that people feel</p>
-        <h1 className="h-display reveal">
-          Stories worth <span className="gradient-text">feeling</span>.
-        </h1>
-        <p className="lede reveal">
-          Love, poems, corporate confessions, and the small true things that make
-          people say <em>&ldquo;that happened to me.&rdquo;</em> Beautifully set, and
-          quiet enough to actually read.
-        </p>
-        <div className="cta-row reveal">
-          <Link href="/stories" className="btn btn-primary">
-            Start reading
-          </Link>
-          <Link href="/submit" className="btn btn-ghost">
-            Submit your story
-          </Link>
+      <section className="hero">
+        <div className="container">
+          <p className="eyebrow reveal">A home for stories that people feel</p>
+          <h1 className="h-display reveal">
+            Stories worth <span className="gradient-text">feeling</span>.
+          </h1>
+          <p className="lede reveal">
+            Love, poems, corporate confessions, and the small true things that make
+            people say <em>&ldquo;that happened to me.&rdquo;</em> Beautifully set, and
+            quiet enough to actually read.
+          </p>
+          <div className="cta-row reveal">
+            <Link href="/stories" className="btn btn-primary">
+              Start reading
+            </Link>
+            <Link href="/submit" className="btn btn-ghost">
+              Submit your story
+            </Link>
+          </div>
+          <div className="stat-row reveal">
+            <div className="stat">
+              <b>{all.length}</b>
+              <span>Stories</span>
+            </div>
+            <div className="stat">
+              <b>{categories.length}</b>
+              <span>Moods to wander</span>
+            </div>
+            <div className="stat">
+              <b>0</b>
+              <span>Algorithms</span>
+            </div>
+          </div>
         </div>
+      </section>
+
+      <section className="container section" style={{ paddingTop: 0 }}>
+        <div className="section-head">
+          <span className="eyebrow">Wander by mood</span>
+        </div>
+        <CategoryStrip />
       </section>
 
       {featured && (
@@ -55,13 +82,6 @@ export default function HomePage() {
           </div>
         </section>
       )}
-
-      <section className="container section" style={{ paddingTop: 0 }}>
-        <div className="section-head">
-          <span className="eyebrow">Wander by mood</span>
-        </div>
-        <CategoryStrip />
-      </section>
 
       <section className="container section" style={{ paddingTop: 0 }}>
         <div className="newsletter reveal">
