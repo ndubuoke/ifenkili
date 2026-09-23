@@ -27,3 +27,6 @@ next-env.d.ts
 
 # runtime inbox (form submissions written to disk in Phase 1)
 /data/
+
+# /brag launch-video working files
+/brag-output/
