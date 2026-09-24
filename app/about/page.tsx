@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { site } from "@/lib/site";
+import { VideoTrailer } from "@/components/VideoTrailer";
 
 export const metadata: Metadata = {
   title: "About",
@@ -40,6 +41,23 @@ export default function AboutPage() {
             Instagram
           </a>
           .
+        </p>
+      </div>
+
+      <div style={{ marginTop: "3rem" }}>
+        <p className="eyebrow" style={{ marginBottom: "1rem" }}>
+          Watch
+        </p>
+        <VideoTrailer
+          poster="/trailer.jpg"
+          src="/trailer.mp4"
+          title="IFENKILI — Stories worth feeling"
+        />
+        <p
+          className="meta"
+          style={{ marginTop: "0.9rem", textTransform: "none", letterSpacing: 0 }}
+        >
+          A 20-second trailer for the whole idea.
         </p>
       </div>
     </section>

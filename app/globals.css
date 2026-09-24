@@ -1012,9 +1012,6 @@ textarea {
   transform: scale(1.08);
 }
 .video-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
   border: 0;
   width: 100vw;
   height: 100dvh;
@@ -1024,6 +1021,14 @@ textarea {
   padding: clamp(16px, 4vw, 56px);
   background: rgba(9, 3, 2, 0.88);
   backdrop-filter: blur(6px);
+}
+/* native <dialog> is display:none by default; showModal() adds [open] and
+   promotes it to the top layer — only style layout once that's true, or the
+   modal (and its backdrop blur) would render permanently on every load. */
+.video-modal[open] {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: center;
