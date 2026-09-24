@@ -164,7 +164,6 @@ body::before {
 
 :root[data-theme="light"] .cursor-glow {
   mix-blend-mode: multiply;
-  opacity: 0;
 }
 
 #app {
