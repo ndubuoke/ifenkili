@@ -24,7 +24,7 @@ export default function SubmitPage() {
         <p className="eyebrow" style={{ marginBottom: "0.8rem" }}>
           Before you send
         </p>
-        <ul style={{ paddingLeft: "1.2rem", color: "var(--text-dim)", fontFamily: "var(--font-serif)", lineHeight: 1.7 }}>
+        <ul style={{ paddingLeft: "1.2rem", color: "var(--text-dim)", fontFamily: "var(--font-body)", lineHeight: 1.7 }}>
           <li>No real names of people or companies. Change identifying details.</li>
           <li>Write what happened to you, or what you witnessed — not rumours.</li>
           <li>200 words minimum. There&rsquo;s no maximum, but tighter is better.</li>

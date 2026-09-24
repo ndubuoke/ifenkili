@@ -30,9 +30,9 @@ export default async function OgImage({
           justifyContent: "space-between",
           padding: "80px",
           background:
-            "linear-gradient(135deg, #120a08 0%, #1c100b 55%, #2a1712 100%)",
-          color: "#fbeee8",
-          fontFamily: "sans-serif",
+            "linear-gradient(135deg, #0f0b08 0%, #18120f 55%, #2c2118 100%)",
+          color: "#f7f2ea",
+          fontFamily: "serif",
         }}
       >
         <div
@@ -41,7 +41,8 @@ export default async function OgImage({
             fontSize: 26,
             letterSpacing: 6,
             textTransform: "uppercase",
-            color: "#ff6134",
+            fontFamily: "sans-serif",
+            color: "#a54e32",
           }}
         >
           {label}
@@ -53,7 +54,7 @@ export default async function OgImage({
             fontSize: title.length > 60 ? 66 : 84,
             fontWeight: 700,
             lineHeight: 1.05,
-            letterSpacing: -2,
+            letterSpacing: -1,
             maxWidth: 1000,
           }}
         >
@@ -66,10 +67,11 @@ export default async function OgImage({
             justifyContent: "space-between",
             alignItems: "flex-end",
             fontSize: 28,
+            fontFamily: "sans-serif",
           }}
         >
           <span style={{ letterSpacing: 8, fontWeight: 700 }}>IFENKILI</span>
-          <span style={{ color: "#9c7b70" }}>{author && `by ${author}`}</span>
+          <span style={{ color: "#a89485" }}>{author && `by ${author}`}</span>
         </div>
       </div>
     ),
