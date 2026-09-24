@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { Story } from "@/lib/content";
-import { formatDate } from "@/lib/content";
 import { getCategory } from "@/lib/categories";
 
 export function StoryCard({ story }: { story: Story }) {
@@ -17,8 +16,12 @@ export function StoryCard({ story }: { story: Story }) {
         <span>{story.author}</span>
         <span className="dot" />
         <span>{story.readingTime} min read</span>
-        <span className="dot" />
-        <span>{formatDate(story.date)}</span>
+        {story.mood && (
+          <>
+            <span className="dot" />
+            <span>{story.mood}</span>
+          </>
+        )}
       </div>
       <Link
         href={`/stories/${story.slug}`}

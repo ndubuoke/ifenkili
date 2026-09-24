@@ -4,6 +4,8 @@ import matter from "gray-matter";
 import { marked } from "marked";
 import type { CategorySlug } from "./categories";
 
+export { formatDate } from "./format";
+
 const STORIES_DIR = path.join(process.cwd(), "content", "stories");
 
 export type Story = {
@@ -106,13 +108,3 @@ export function getLatestStories(limit = 6, excludeSlug?: string): Story[] {
     .slice(0, limit);
 }
 
-export function formatDate(iso: string): string {
-  const d = new Date(iso + "T00:00:00Z");
-  if (Number.isNaN(d.getTime())) return "";
-  return d.toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    timeZone: "UTC",
-  });
-}

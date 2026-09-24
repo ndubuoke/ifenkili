@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getAllStories, formatDate } from "@/lib/content";
+import { getAllStories } from "@/lib/content";
 import { categories, getCategory } from "@/lib/categories";
+import { StoryListFilter } from "@/components/StoryListFilter";
 
 export const revalidate = 300;
 
@@ -52,28 +53,7 @@ export default async function StoriesPage({
         {stories.length === 0 ? (
           <p className="lede">Nothing here yet. Check back soon.</p>
         ) : (
-          <div className="story-list">
-            {stories.map((s) => {
-              const cat = getCategory(s.category);
-              return (
-                <article key={s.slug} className="story-row">
-                  <h3>
-                    <Link href={`/stories/${s.slug}`} className="link-underline">
-                      {s.title}
-                    </Link>
-                  </h3>
-                  <span className="meta">
-                    <span>{cat?.label}</span>
-                    <span className="dot" />
-                    <span>{s.readingTime} min</span>
-                    <span className="dot" />
-                    <span>{formatDate(s.date)}</span>
-                  </span>
-                  <p className="excerpt">{s.excerpt}</p>
-                </article>
-              );
-            })}
-          </div>
+          <StoryListFilter stories={stories} />
         )}
       </section>
     </>

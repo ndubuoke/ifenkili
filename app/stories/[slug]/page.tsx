@@ -61,7 +61,15 @@ export default async function StoryPage({
 
   return (
     <>
-      <ReadingProgress />
+      <ReadingProgress
+        story={{
+          slug: story.slug,
+          title: story.title,
+          category: story.category,
+          mood: story.mood ?? null,
+          readingTime: story.readingTime,
+        }}
+      />
       <article className="container article">
         <header className="article-header">
           <div className="meta" style={{ justifyContent: "space-between" }}>

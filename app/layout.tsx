@@ -1,28 +1,31 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Lora } from "next/font/google";
+import { Cormorant_Garamond, EB_Garamond, Inter } from "next/font/google";
 import { site } from "@/lib/site";
+import { getAllStories } from "@/lib/content";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { CursorGlow } from "@/components/CursorGlow";
 import "./globals.css";
 
-const geist = Geist({
+const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  variable: "--font-geist",
+  weight: ["500", "600", "700"],
+  variable: "--font-cormorant",
   display: "swap",
 });
 
-const lora = Lora({
+const ebGaramond = EB_Garamond({
   subsets: ["latin"],
-  variable: "--font-lora",
-  display: "swap",
-});
-
-const geistMono = Geist_Mono({
-  subsets: ["latin"],
+  style: ["italic", "normal"],
   weight: ["400", "500"],
-  variable: "--font-geist-mono",
+  variable: "--font-eb-garamond",
+  display: "swap",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-inter",
   display: "swap",
 });
 
@@ -50,21 +53,43 @@ export const metadata: Metadata = {
   },
 };
 
+// Runs before paint so a saved theme preference never flashes the wrong
+// palette (light/dark) on first load.
+const THEME_INIT = `
+try {
+  var t = localStorage.getItem("ifenkili:theme");
+  if (t === "light" || t === "dark") {
+    document.documentElement.setAttribute("data-theme", t);
+  }
+} catch (e) {}
+`;
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const searchIndex = getAllStories().map((s) => ({
+    slug: s.slug,
+    title: s.title,
+    excerpt: s.excerpt,
+    category: s.category,
+    mood: s.mood ?? null,
+  }));
+
   return (
     <html
       lang="en"
-      className={`${geist.variable} ${lora.variable} ${geistMono.variable}`}
+      className={`${cormorant.variable} ${ebGaramond.variable} ${inter.variable}`}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
+      </head>
       <body>
         <div className="grain" aria-hidden="true" />
         <CursorGlow />
         <div id="app">
-          <SiteHeader />
+          <SiteHeader stories={searchIndex} />
           <main>{children}</main>
           <SiteFooter />
         </div>
