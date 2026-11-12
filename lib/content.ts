@@ -56,7 +56,9 @@ function readStoryFile(fileName: string): Story {
     featured: Boolean(data.featured),
     readingTime,
     wordCount: words,
-    html: marked.parse(content) as string,
+    // Poems keep their line breaks (single newline → <br>); prose paragraphs
+    // are free to reflow.
+    html: marked.parse(content, { breaks: data.category === "poems" }) as string,
     raw: content,
   };
 }
